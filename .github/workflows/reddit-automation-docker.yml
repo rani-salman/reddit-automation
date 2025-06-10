@@ -1,0 +1,58 @@
+name: Reddit Automation Test (Docker)
+
+on:
+  # Alternative workflow using Docker for better dependency management
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Test execution mode'
+        required: true
+        default: 'headless'
+        type: choice
+        options:
+        - headless
+        - debug
+
+jobs:
+  reddit-automation-docker:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.40.0-focal
+      options: --user 1001
+    
+    steps:
+    - name: 🚀 Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Install Python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: 🌍 Setup environment
+      env:
+        REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+        REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+      run: |
+        echo "REDDIT_USERNAME=$REDDIT_USERNAME" > .env
+        echo "REDDIT_PASSWORD=$REDDIT_PASSWORD" >> .env
+        echo "TEST_HEADLESS=true" >> .env
+        echo "CI=true" >> .env
+    
+    - name: 🧪 Run Reddit Automation Test
+      env:
+        CI: true
+        HEADLESS: true
+        PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      run: |
+        echo "🚀 Running Reddit Automation Test in Docker..."
+        python -m pytest step_definitions/reddit_steps.py::test_reddit_automation \
+          -v \
+          --tb=short \
+          --disable-warnings
+    
+    - name: ✅ Success notification
+      if: success()
+      run: |
+        echo "✅ Docker-based test completed successfully!"
+        echo "🎯 Reddit automation validated in containerized environment"

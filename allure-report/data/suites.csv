@@ -1,0 +1,2 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"../features/reddit_automation.feature: Vote on gaming subreddit posts based on Nintendo content","56655","test_reddit_automation","step_definitions","Tue Jun 10 19:29:54 EEST 2025","passed","Tue Jun 10 19:30:51 EEST 2025","","Reddit Automation","",""

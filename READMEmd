@@ -1,0 +1,108 @@
+# 🚀 Reddit Automation BDD Test Suite
+
+A professional-grade automation framework for Reddit interactions using Playwright, BDD, and comprehensive reporting.
+
+## ✨ Features
+
+- 🎭 **BDD Testing** with pytest-bdd and Gherkin scenarios
+- 📹 **Video Recording** of test execution with timestamp naming
+- 📊 **Allure Reports** with embedded videos and screenshots  
+- 🎨 **Beautiful HTML Reports** for test results
+- 🛡️ **Anti-Detection** measures for reliable automation
+- 🔧 **Page Object Model** for maintainable code structure
+- 🎯 **Smart Post Detection** (excludes pinned posts and ads)
+- 🎮 **Gaming Content Analysis** with Nintendo detection logic
+
+## 🏗️ Architecture
+
+```
+├── features/
+│   └── reddit_automation.feature     # BDD Gherkin scenarios
+├── step_definitions/
+│   └── reddit_steps.py              # Step implementations with Allure annotations
+├── pages/
+│   ├── base_page.py                 # Base page class
+│   ├── reddit_page.py               # Main Reddit page interactions
+│   ├── login_page.py                # Login functionality
+│   └── gaming_subreddit_page.py     # Gaming subreddit operations
+├── videos/                          # 📹 Recorded test videos
+├── allure-results/                  # 📊 Allure test results
+├── allure-report/                   # 📈 Generated Allure reports
+├── reports/                         # 📋 HTML test reports
+├── conftest.py                      # Pytest configuration with video recording
+├── test_runner.py                   # Enhanced test execution with reporting
+└── requirements.txt                 # Dependencies including Allure
+```
+
+## 🚀 Quick Start
+
+### 1. Setup Environment
+```bash
+# Install all dependencies and setup
+python setup.py
+
+# Create credentials file
+cp .env.example .env
+# Edit .env with your Reddit credentials
+```
+
+### 2. Run Tests with Video Recording
+```bash
+python test_runner.py
+```
+
+### 3. View Results
+- **Allure Report**: Opens automatically in browser with embedded videos
+- **HTML Report**: Available in `reports/` directory
+- **Videos**: Saved in `videos/` with test name and timestamp
+
+## 📹 Video Recording Features
+
+- **Automatic Recording**: Every test execution is recorded
+- **Smart Naming**: Videos named as `{test_name}_{timestamp}.webm`
+- **High Quality**: 1920x1080 resolution recording
+- **Embedded Reports**: Videos automatically attached to Allure reports
+
+Example video name: `test_reddit_automation_2024-06-10_14-30-25.webm`
+
+## 📊 Allure Reporting Features
+
+- **Epic/Feature/Story Structure**: Organized test hierarchy
+- **Step-by-Step Screenshots**: Visual documentation of each action
+- **Video Attachments**: Full test execution videos embedded
+- **Detailed Logs**: Console output and test metadata
+- **Voting Decision Tracking**: Nintendo content analysis results
+- **Timestamps**: Test execution and completion times
+
+## 🎯 Test Scenarios
+
+### Main Test Flow:
+1. **Navigate** to old.reddit.com
+2. **Login** using new Reddit authentication flow
+3. **Navigate** to r/gaming subreddit
+4. **Identify** second non-pinned, non-ad post
+5. **Analyze** post title for Nintendo content
+6. **Vote** accordingly (👍 for Nintendo content, 👎 for others)
+7. **Logout** and verify logout success
+
+## 🛡️ Anti-Detection Features
+
+- **Firefox Browser** (less detected than Chrome)
+- **Realistic User Agents** and headers
+- **JavaScript Stealth Injection** to hide automation
+- **Human-like Delays** and interactions
+- **Custom Element Handling** for modern web components
+
+## 📋 Requirements
+
+- Python 3.8+
+- Node.js (for Allure CLI)
+- Firefox browser (auto-installed by Playwright)
+
+## 🔧 Advanced Configuration
+
+### Video Settings
+Modify `conftest.py` to change video quality:
+```python
+record_video_size={"width": 1920, "height": 1080}
+```

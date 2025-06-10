@@ -1,0 +1,83 @@
+name: Reddit Automation Test
+
+on:
+  # Run on push to main branch
+  push:
+    branches: [ main, master ]
+  
+  # Run on pull requests
+  pull_request:
+    branches: [ main, master ]
+  
+  # Allow manual trigger
+  workflow_dispatch:
+  
+  # Run on schedule (daily at 9 AM UTC)
+  schedule:
+    - cron: '0 9 * * *'
+
+jobs:
+  reddit-automation-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.10.11]
+    
+    steps:
+    - name: 🚀 Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: 📦 Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: 🔧 Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: 🎭 Install Playwright browsers
+      run: |
+        python -m playwright install firefox
+        python -m playwright install-deps firefox
+    
+    - name: 🌍 Create environment file
+      env:
+        REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+        REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+      run: |
+        echo "REDDIT_USERNAME=$REDDIT_USERNAME" > .env
+        echo "REDDIT_PASSWORD=$REDDIT_PASSWORD" >> .env
+        echo "TEST_HEADLESS=true" >> .env
+        echo "TEST_SLOW_MO=1000" >> .env
+    
+    - name: 🧪 Run Reddit Automation Test
+      env:
+        CI: true
+        HEADLESS: true
+      run: |
+        echo "🚀 Starting Reddit Automation Test..."
+        python -m pytest step_definitions/reddit_steps.py -v --tb=short
+    
+    
+    - name: ✅ Test completion notification
+      if: success()
+      run: |
+        echo "✅ Reddit Automation Test completed successfully!"
+        echo "🎯 Test verified Reddit login, gaming subreddit navigation, and Nintendo content voting logic"
+    
+    - name: ❌ Test failure notification  
+      if: failure()
+      run: |
+        echo "❌ Reddit Automation Test failed!"
+        echo "📋 Check the logs above for details"

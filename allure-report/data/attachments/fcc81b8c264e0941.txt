@@ -1,0 +1,5 @@
+Browser: Firefox
+Viewport: 1920x1080
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0
+Video Recording: Enabled
+Video File: test_reddit_automation_2025-06-10_19-29-55.webm

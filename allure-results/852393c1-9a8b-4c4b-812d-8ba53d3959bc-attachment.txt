@@ -1,0 +1,46 @@
+Step: Navigating to old Reddit homepage
+Navigating to old.reddit.com...
+Successfully loaded old Reddit
+✓ Successfully navigated to old Reddit
+Step: Logging into Reddit
+Starting login process...
+Clicking login link...
+Login link clicked
+Waiting for new Reddit login page...
+Current URL: https://old.reddit.com/login/?dest=https%3A%2F%2Fold.reddit.com%2F
+Waiting for login form...
+Login form found
+Filling username...
+Username fill error: Error: Element is not an <input>, <textarea> or [contenteditable] element
+Username filled with alternative selector
+Filling password...
+Password fill error: Error: Element is not an <input>, <textarea> or [contenteditable] element
+Password filled with alternative selector
+Looking for submit button...
+Found submit button with selector: button:has-text('Log In')
+Submit button clicked
+After login URL: https://old.reddit.com/login/?dest=https%3A%2F%2Fold.reddit.com%2F
+Login process completed
+✓ Login process completed
+Step: Navigating to gaming subreddit
+Navigating to gaming subreddit...
+Navigated to gaming subreddit
+✓ Navigated to gaming subreddit
+Step: Finding second valid post
+✓ Found second valid post
+Step: Voting on post based on Nintendo content
+Post title: The original Cutscene for Resident Evil was so overwhelmingly scary that my 10 year old self turned off the TV, left the room, and never played again.
+Title does not contain 'Nintendo' - voting down
+✓ Voting completed
+✓ Or step - Vote down logic included in Nintendo check
+Step: Logging out from Reddit
+Starting logout process...
+Looking for logout link...
+Found logout link with selector: a[href='javascript:void(0)'][onclick*='submit()']:has-text('logout')
+Logout link clicked
+Waiting for logout to complete...
+Verifying logout success...
+Checking logout status on old Reddit homepage...
+✓ Logout successful - Login button is visible
+✓ Logged out successfully
+✅ Video saved and attached: videos\test_reddit_automation_2025-06-10_19-29-55.webm

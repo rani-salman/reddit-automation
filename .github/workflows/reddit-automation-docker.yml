@@ -16,6 +16,7 @@ on:
 jobs:
   reddit-automation-docker:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     container:
       image: mcr.microsoft.com/playwright/python:v1.40.0-focal
       options: --user 1001
@@ -51,8 +52,21 @@ jobs:
           --tb=short \
           --disable-warnings
     
+    - name: 📊 Upload test results on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-test-failure-${{ github.run_number }}
+        path: |
+          .env
+          **/*.log
+        retention-days: 3
+        if-no-files-found: ignore
+    
     - name: ✅ Success notification
       if: success()
       run: |
         echo "✅ Docker-based test completed successfully!"
         echo "🎯 Reddit automation validated in containerized environment"
+        echo "🐳 Using official Playwright Docker image"
+        echo "⚡ Optimized execution with pre-built dependencies"

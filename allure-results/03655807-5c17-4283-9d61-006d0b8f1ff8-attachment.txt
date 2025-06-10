@@ -1,0 +1,4 @@
+Browser: Firefox
+Mode: Headed
+Viewport: 1920x1080
+Video Recording: Enabled

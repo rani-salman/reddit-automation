@@ -1,7 +1,13 @@
+🎭 Browser mode: Headed (Local)
+⚡ Slow motion: 2000ms
+🔍 CI detected: False
+🌍 Environment variables: CI=None, GITHUB_ACTIONS=None
+🎥 Local Mode: Video recording enabled
 Step: Navigating to old Reddit homepage
 Navigating to old.reddit.com...
 Successfully loaded old Reddit
 ✓ Successfully navigated to old Reddit
+✅ Credentials loaded for user: Competitive-Break279
 Step: Logging into Reddit
 Starting login process...
 Clicking login link...
@@ -29,7 +35,7 @@ Navigated to gaming subreddit
 Step: Finding second valid post
 ✓ Found second valid post
 Step: Voting on post based on Nintendo content
-Post title: The original Cutscene for Resident Evil was so overwhelmingly scary that my 10 year old self turned off the TV, left the room, and never played again.
+Post title: Three former Ubisoft executives under trial in France for harassment, including farting in workers’ faces
 Title does not contain 'Nintendo' - voting down
 ✓ Voting completed
 ✓ Or step - Vote down logic included in Nintendo check
@@ -43,4 +49,4 @@ Verifying logout success...
 Checking logout status on old Reddit homepage...
 ✓ Logout successful - Login button is visible
 ✓ Logged out successfully
-✅ Video saved and attached: videos\test_reddit_automation_2025-06-10_19-29-55.webm
+⚠️ Video handling error: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\Admin\\Desktop\\proximie automation test\\videos\\3c83b2ae-1861-46a2-bcff-65d8fd57d376.webm'

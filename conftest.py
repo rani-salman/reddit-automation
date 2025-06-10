@@ -160,8 +160,8 @@ def page(browser, request):
 @pytest.fixture
 def reddit_credentials():
     """Load Reddit credentials from environment variables"""
-    username = os.getenv('REDDIT_USERNAME', 'your_username_here')
-    password = os.getenv('REDDIT_PASSWORD', 'your_password_here')
+    username = os.getenv('REDDIT_USERNAME', 'Competitive-Break279')
+    password = os.getenv('REDDIT_PASSWORD', 'Rani.salman1')
     
     # Enhanced credential validation
     if username == 'your_username_here' or password == 'your_password_here':

@@ -1,6 +1,5 @@
 🎭 Browser mode: Headed (Local)
 ⚡ Slow motion: 2000ms
-🔍 CI detected: False
 🌍 Environment variables: CI=None, GITHUB_ACTIONS=None
 🎥 Local Mode: Video recording enabled
 Step: Navigating to old Reddit homepage
@@ -49,4 +48,4 @@ Verifying logout success...
 Checking logout status on old Reddit homepage...
 ✓ Logout successful - Login button is visible
 ✓ Logged out successfully
-⚠️ Video handling error: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\Admin\\Desktop\\proximie automation test\\videos\\3c83b2ae-1861-46a2-bcff-65d8fd57d376.webm'
+⚠️ Video handling error: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\Admin\\Desktop\\proximie automation test\\videos\\aa037a20-e3ba-4a5a-9ac2-e0e6864fea63.webm'

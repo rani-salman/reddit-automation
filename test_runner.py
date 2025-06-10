@@ -232,13 +232,6 @@ def run_tests():
         if report_path and os.path.exists(report_path):
             print(f"📂 Report available at: {report_path}")
             print("📹 Video recordings are embedded/linked in the report")
-            
-            try:
-                import webbrowser
-                webbrowser.open(f"file://{report_path}")
-                print("🌐 Opening report in browser...")
-            except:
-                print("💡 Manually open the report file in your browser")
         
         # List available videos
         videos_dir = "videos"

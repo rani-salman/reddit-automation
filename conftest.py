@@ -8,21 +8,11 @@ import shutil
 @pytest.fixture(scope="session")
 def browser():
     with sync_playwright() as p:
-        # Enhanced CI detection
-        is_ci = (
-            os.getenv('CI', '').lower() == 'true' or
-            os.getenv('GITHUB_ACTIONS', '').lower() == 'true' or
-            os.getenv('HEADLESS', '').lower() == 'true' or
-            'CI' in os.environ
-        )
-        
-        # Force headless in CI environments
-        headless_mode = is_ci
-        slow_mo = 1000 if is_ci else 2000
+        headless_mode = False
+        slow_mo = 2000
         
         print(f"🎭 Browser mode: {'Headless (CI)' if headless_mode else 'Headed (Local)'}")
         print(f"⚡ Slow motion: {slow_mo}ms")
-        print(f"🔍 CI detected: {is_ci}")
         print(f"🌍 Environment variables: CI={os.getenv('CI')}, GITHUB_ACTIONS={os.getenv('GITHUB_ACTIONS')}")
         
         # Launch browser with appropriate settings
@@ -31,20 +21,7 @@ def browser():
             'slow_mo': slow_mo
         }
         
-        # Add CI-specific options
-        if is_ci:
-            launch_options.update({
-                'args': [
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
-                    '--disable-web-security',
-                    '--disable-features=VizDisplayCompositor',
-                    '--disable-background-timer-throttling',
-                    '--disable-backgrounding-occluded-windows',
-                    '--disable-renderer-backgrounding'
-                ]
-            })
+
         
         browser = p.firefox.launch(**launch_options)
         yield browser
@@ -56,37 +33,21 @@ def page(browser, request):
     test_name = request.node.name.replace("::", "_").replace(" ", "_")
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
-    # Enhanced CI detection
-    is_ci = (
-        os.getenv('CI', '').lower() == 'true' or
-        os.getenv('GITHUB_ACTIONS', '').lower() == 'true' or
-        os.getenv('HEADLESS', '').lower() == 'true' or
-        'CI' in os.environ
-    )
+
     
-    # Create context based on environment
-    if is_ci:
-        print("🔧 CI Mode: Optimized configuration for headless execution")
-        context = browser.new_context(
-            user_agent='Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/121.0',
-            viewport={'width': 1920, 'height': 1080},
-            # Disable images and other resources to speed up CI
-            java_script_enabled=True,
-            ignore_https_errors=True
-        )
-    else:
-        # Local mode with video recording
-        print("🎥 Local Mode: Video recording enabled")
-        videos_dir = "videos"
-        os.makedirs(videos_dir, exist_ok=True)
-        
-        video_filename = f"{test_name}_{timestamp}.webm"
-        
-        context = browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
-            record_video_dir=videos_dir,
-            record_video_size={"width": 1920, "height": 1080}
-        )
+
+    # Local mode with video recording
+    print("🎥 Local Mode: Video recording enabled")
+    videos_dir = "videos"
+    os.makedirs(videos_dir, exist_ok=True)
+    
+    video_filename = f"{test_name}_{timestamp}.webm"
+    
+    context = browser.new_context(
+        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+        record_video_dir=videos_dir,
+        record_video_size={"width": 1920, "height": 1080}
+    )
     
     page = context.new_page()
     
@@ -117,18 +78,18 @@ def page(browser, request):
     """)
     
     # Add environment info to Allure (only if not in CI to avoid clutter)
-    if not is_ci:
-        allure.attach(
-            f"Browser: Firefox\nMode: {'Headless' if is_ci else 'Headed'}\nViewport: 1920x1080\nVideo Recording: {'Disabled' if is_ci else 'Enabled'}",
-            name="Test Environment",
-            attachment_type=allure.attachment_type.TEXT
-        )
+    
+    allure.attach(
+        f"Browser: Firefox\nMode: {'Headed'}\nViewport: 1920x1080\nVideo Recording: {'Enabled'}",
+        name="Test Environment",
+        attachment_type=allure.attachment_type.TEXT
+    )
     
     yield page
     
     # Handle cleanup
     try:
-        if not is_ci and page.video:
+        if  page.video:
             # Handle video in local mode only
             video_path = page.video.path()
             if video_path and os.path.exists(video_path):
@@ -184,24 +145,19 @@ def pytest_configure(config):
     
     config._allure_configure = True
     
-    # Detect environment
-    is_ci = (
-        os.getenv('CI', '').lower() == 'true' or
-        os.getenv('GITHUB_ACTIONS', '').lower() == 'true'
-    )
     
     # Create environment.properties for Allure
     env_properties = f"""
 Browser=Firefox
-Platform={'Linux (CI)' if is_ci else 'Windows (Local)'}
+Platform={'Windows (Local)'}
 Python.Version={os.sys.version.split()[0]}
 Test.Framework=Pytest + BDD + Playwright
-Execution.Mode={'Headless (CI)' if is_ci else 'Headed (Local)'}
-Video.Recording={'Disabled (CI)' if is_ci else 'Enabled (Local)'}
+Execution.Mode={'Headed (Local)'}
+Video.Recording={'Enabled (Local)'}
 Test.Type=UI Automation
 Application=Reddit
 Test.Suite=Gaming Subreddit Automation
-Environment={'CI/CD Pipeline' if is_ci else 'Local Development'}
+Environment={'Local Development'}
 """
     
     # Write environment file for Allure

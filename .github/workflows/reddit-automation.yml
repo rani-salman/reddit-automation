@@ -1,17 +1,14 @@
-name: Reddit Automation Test (Docker)
+name: Reddit Automation Test
 
 on:
-  # Alternative workflow using Docker for better dependency management
-  workflow_dispatch:
-    inputs:
-      test_mode:
-        description: 'Test execution mode'
-        required: true
-        default: 'headless'
-        type: choice
-        options:
-        - headless
-        - debug
+  # Run on push to main branch
+  push:
+    branches: [ main, master ]
+  
+  # Run on pull requests
+  pull_request:
+    branches: [ main, master ]
+  
 
 jobs:
   reddit-automation-docker:

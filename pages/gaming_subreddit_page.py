@@ -11,17 +11,14 @@ class GamingSubredditPage(BasePage):
         self.current_post = None
         
     def find_second_non_pinned_non_ad_post(self):
-        # Wait for posts to load
         self.page.wait_for_selector(self.posts_selector, timeout=15000)
         time.sleep(2)
         
-        # Get all valid posts (not pinned, not ads)
         posts = self.page.locator(self.posts_selector).all()
         
         if len(posts) < 2:
             raise Exception("Not enough valid posts found")
             
-        # Get the second valid post
         self.current_post = posts[1]
         return self.current_post
         

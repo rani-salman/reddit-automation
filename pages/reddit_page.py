@@ -6,7 +6,6 @@ class RedditPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
         self.gaming_subreddit_link = "a[href='/r/gaming']"
-        # Updated logout selectors
         self.logout_link = "a[href='javascript:void(0)'][onclick*='submit()']:has-text('logout')"
         self.login_button_verify = "a.login-required.login-link"
         
@@ -35,7 +34,7 @@ class RedditPage(BasePage):
             time.sleep(2)
         
         try:
-            # Look for the specific logout link you mentioned
+            # Look for the specific logout link
             print("Looking for logout link...")
             
             # Try multiple selectors for the logout link
@@ -62,20 +61,16 @@ class RedditPage(BasePage):
             
             if not logout_clicked:
                 print("Could not find logout link, trying fallback...")
-                # Fallback: try direct navigation to logout
                 self.page.goto("https://old.reddit.com/logout", wait_until="domcontentloaded", timeout=30000)
             
-            # Wait for logout to process
             print("Waiting for logout to complete...")
             time.sleep(3)
-            
-            # Verify logout was successful by checking for login button
+
             print("Verifying logout success...")
             self.verify_logout_success()
             
         except Exception as e:
             print(f"Logout error: {e}")
-            # Try fallback logout
             try:
                 self.page.goto("https://old.reddit.com/logout", wait_until="domcontentloaded", timeout=30000)
                 time.sleep(2)

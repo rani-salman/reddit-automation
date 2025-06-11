@@ -15,7 +15,6 @@ def browser():
         print(f"⚡ Slow motion: {slow_mo}ms")
         print(f"🌍 Environment variables: CI={os.getenv('CI')}, GITHUB_ACTIONS={os.getenv('GITHUB_ACTIONS')}")
         
-        # Launch browser with appropriate settings
         launch_options = {
             'headless': headless_mode,
             'slow_mo': slow_mo
@@ -29,14 +28,12 @@ def browser():
 
 @pytest.fixture(scope="function") 
 def page(browser, request):
-    # Generate test name for logging
     test_name = request.node.name.replace("::", "_").replace(" ", "_")
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
 
     
 
-    # Local mode with video recording
     print("🎥 Local Mode: Video recording enabled")
     videos_dir = "videos"
     os.makedirs(videos_dir, exist_ok=True)
@@ -51,7 +48,6 @@ def page(browser, request):
     
     page = context.new_page()
     
-    # Enhanced stealth configuration
     page.add_init_script("""
         // Remove webdriver property
         Object.defineProperty(navigator, 'webdriver', {
@@ -77,7 +73,6 @@ def page(browser, request):
         delete window.navigator.__proto__.webdriver;
     """)
     
-    # Add environment info to Allure (only if not in CI to avoid clutter)
     
     allure.attach(
         f"Browser: Firefox\nMode: {'Headed'}\nViewport: 1920x1080\nVideo Recording: {'Enabled'}",
@@ -87,10 +82,8 @@ def page(browser, request):
     
     yield page
     
-    # Handle cleanup
     try:
         if  page.video:
-            # Handle video in local mode only
             video_path = page.video.path()
             if video_path and os.path.exists(video_path):
                 final_video_path = os.path.join("videos", f"{test_name}_{timestamp}.webm")
@@ -98,7 +91,6 @@ def page(browser, request):
                     shutil.move(video_path, final_video_path)
                     print(f"📹 Video saved: {final_video_path}")
                     
-                    # Attach to Allure if available
                     try:
                         with open(final_video_path, "rb") as video_file:
                             allure.attach(
@@ -107,7 +99,7 @@ def page(browser, request):
                                 attachment_type=allure.attachment_type.WEBM
                             )
                     except:
-                        pass  # Allure might not be available in all runs
+                        pass  
                 except Exception as e:
                     print(f"⚠️ Video handling error: {e}")
     except Exception as e:
@@ -124,7 +116,6 @@ def reddit_credentials():
     username = os.getenv('REDDIT_USERNAME', 'Competitive-Break279')
     password = os.getenv('REDDIT_PASSWORD', 'Rani.salman1')
     
-    # Enhanced credential validation
     if username == 'your_username_here' or password == 'your_password_here':
         print("⚠️ Warning: Using placeholder credentials")
         print("💡 Set REDDIT_USERNAME and REDDIT_PASSWORD environment variables")
@@ -137,7 +128,6 @@ def reddit_credentials():
         'password': password
     }
 
-# Enhanced environment configuration for Allure
 def pytest_configure(config):
     """Add environment info to Allure report"""
     if hasattr(config, '_allure_configure'):
@@ -146,7 +136,6 @@ def pytest_configure(config):
     config._allure_configure = True
     
     
-    # Create environment.properties for Allure
     env_properties = f"""
 Browser=Firefox
 Platform={'Windows (Local)'}
@@ -160,7 +149,6 @@ Test.Suite=Gaming Subreddit Automation
 Environment={'Local Development'}
 """
     
-    # Write environment file for Allure
     os.makedirs('allure-results', exist_ok=True)
     with open('allure-results/environment.properties', 'w') as f:
         f.write(env_properties.strip())

@@ -9,7 +9,6 @@ def check_allure_installation():
     """Check if Allure is properly installed and accessible"""
     print("🔍 Checking Allure installation...")
     
-    # Try different ways to find Allure
     allure_commands = ['allure', 'allure.cmd', 'allure.bat']
     
     for cmd in allure_commands:
@@ -22,7 +21,6 @@ def check_allure_installation():
         except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
             continue
     
-    # Check if Allure is in npm global modules
     try:
         npm_root = subprocess.run(['npm', 'root', '-g'], capture_output=True, text=True, timeout=10)
         if npm_root.returncode == 0:
@@ -31,7 +29,6 @@ def check_allure_installation():
                 print(f"✅ Found Allure in npm global: {allure_path}")
                 return allure_path
             
-            # Check for .cmd version on Windows
             allure_cmd_path = allure_path + '.cmd'
             if os.path.exists(allure_cmd_path):
                 print(f"✅ Found Allure in npm global: {allure_cmd_path}")
@@ -50,7 +47,6 @@ def generate_allure_report_manual():
         import json
         from pathlib import Path
         
-        # Create basic HTML report
         html_content = f"""
 <!DOCTYPE html>
 <html>
@@ -158,7 +154,6 @@ def generate_allure_report_manual():
 </html>
         """
         
-        # Save the HTML report
         report_path = "allure-report/index.html"
         os.makedirs("allure-report", exist_ok=True)
         
@@ -174,28 +169,24 @@ def generate_allure_report_manual():
 
 def run_tests():
     """Run the BDD tests with Allure reporting and video recording"""
-    # Add current directory to Python path
     sys.path.append(os.getcwd())
     
-    # Create reports directories
     os.makedirs('allure-results', exist_ok=True)
     os.makedirs('allure-report', exist_ok=True)
     os.makedirs('videos', exist_ok=True)
     
-    # Get timestamp for report naming
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
     print("🚀 Starting Reddit Automation Test with Video Recording...")
     print(f"📹 Videos will be saved in: videos/")
     print(f"📊 Allure results will be in: allure-results/")
     
-    # Run pytest with Allure and video recording
     exit_code = pytest.main([
         'step_definitions/reddit_steps.py',
         '-v',
         '--tb=short',
         '--alluredir=allure-results',
-        '--clean-alluredir',  # Clean previous results
+        '--clean-alluredir', 
         f'--html=reports/html_report_{timestamp}.html',
         '--self-contained-html'
     ])
@@ -204,11 +195,9 @@ def run_tests():
         print("✅ Test completed successfully!")
         print("\n📊 Generating Allure Report...")
         
-        # Check for Allure installation
         allure_cmd = check_allure_installation()
         
         if allure_cmd:
-            # Generate Allure report with found command
             try:
                 result = subprocess.run([
                     allure_cmd, 'generate', 'allure-results', 
@@ -228,12 +217,10 @@ def run_tests():
             print("⚠️ Creating alternative report...")
             report_path = generate_allure_report_manual()
         
-        # Try to open the report
         if report_path and os.path.exists(report_path):
             print(f"📂 Report available at: {report_path}")
             print("📹 Video recordings are embedded/linked in the report")
         
-        # List available videos
         videos_dir = "videos"
         if os.path.exists(videos_dir):
             videos = [f for f in os.listdir(videos_dir) if f.endswith('.webm')]

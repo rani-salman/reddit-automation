@@ -42,13 +42,11 @@ class LoginPage(BasePage):
         except Exception as e:
             print(f"Login form wait error: {e}")
         
-        # Step 4: Fill username using the custom element
         print("Filling username...")
         try:
-            # Try the main selector first
             username_element = self.page.locator("#login-username")
             if username_element.count() > 0:
-                username_element.click()  # Click to focus
+                username_element.click()  
                 time.sleep(0.5)
                 username_element.fill(username)
                 print("Username filled successfully")
@@ -68,10 +66,10 @@ class LoginPage(BasePage):
         # Step 5: Fill password using the custom element
         print("Filling password...")
         try:
-            # Try the main selector first
+            
             password_element = self.page.locator("#login-password")
             if password_element.count() > 0:
-                password_element.click()  # Click to focus
+                password_element.click()
                 time.sleep(0.5)
                 password_element.fill(password)
                 print("Password filled successfully")
@@ -79,7 +77,6 @@ class LoginPage(BasePage):
                 print("Password field not found")
         except Exception as e:
             print(f"Password fill error: {e}")
-            # Try alternative - look for input inside the custom element
             try:
                 self.page.locator("#login-password input").fill(password)
                 print("Password filled with alternative selector")
@@ -91,7 +88,6 @@ class LoginPage(BasePage):
         # Step 6: Look for and click submit button
         print("Looking for submit button...")
         try:
-            # Try different submit button selectors
             submit_selectors = [
                 "button[type='submit']",
                 "button:has-text('Log In')",
